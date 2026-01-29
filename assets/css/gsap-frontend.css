@@ -1,0 +1,80 @@
+/**
+ * GSAP Elementor — Frontend Styles
+ */
+
+/* Base widget styles */
+[data-gsap-widget] {
+	position: relative;
+}
+
+/* ScrollTo button reset */
+.gsap-scroll-to-btn {
+	border: none;
+	cursor: pointer;
+	font-family: inherit;
+	font-size: 16px;
+	transition: opacity 0.2s;
+}
+
+.gsap-scroll-to-btn:hover {
+	opacity: 0.85;
+}
+
+/* SplitText — ensure inline-block for chars */
+.gsap-split-text-target .char,
+.gsap-split-text-target .word,
+.gsap-split-text-target .line {
+	display: inline-block;
+}
+
+/* Typewriter cursor blink */
+.gsap-typewriter-cursor {
+	display: inline-block;
+	margin-left: 2px;
+	font-weight: normal;
+}
+
+/* DrawSVG containers */
+.gsap-draw-svg-target svg {
+	display: block;
+	max-width: 100%;
+	height: auto;
+}
+
+/* Flip grid filter buttons */
+.gsap-flip-filter-btn {
+	transition: background-color 0.2s, color 0.2s;
+	font-family: inherit;
+}
+
+.gsap-flip-filter-btn:hover,
+.gsap-flip-filter-btn.gsap-flip-filter-active {
+	background-color: #333 !important;
+	color: #fff !important;
+}
+
+/* Draggable cursor */
+.gsap-draggable-target {
+	cursor: grab;
+	user-select: none;
+	-webkit-user-select: none;
+}
+
+.gsap-draggable-target:active {
+	cursor: grabbing;
+}
+
+/* Physics2D particles */
+.gsap-physics2d-particle {
+	pointer-events: none;
+}
+
+/* MotionPath container */
+.gsap-motion-path-container {
+	overflow: visible;
+}
+
+/* Observer touch action */
+.gsap-widget-observer {
+	touch-action: none;
+}
