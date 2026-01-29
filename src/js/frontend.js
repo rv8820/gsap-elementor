@@ -778,6 +778,183 @@ function initPhysics2D(el, config) {
 }
 
 /* ======================================
+ * Universal Injected Animation Handler
+ * Picks up data-gsap-anim on ANY Elementor element.
+ * ====================================== */
+
+function initInjectedAnimations(container) {
+	const root = container || document;
+	const elements = root.querySelectorAll('[data-gsap-anim]');
+
+	elements.forEach((el) => {
+		if (el.dataset.gsapAnimInit) return;
+		el.dataset.gsapAnimInit = '1';
+
+		let config;
+		try {
+			config = JSON.parse(el.dataset.gsapAnim);
+		} catch (e) {
+			console.warn('GSAP Elementor: invalid injected config', e);
+			return;
+		}
+
+		// If SplitText is enabled, delegate to the split handler
+		if (config.splitText) {
+			initInjectedSplitText(el, config);
+			return;
+		}
+
+		// Build the "from" vars based on preset or custom
+		const fromVars = buildPresetFromVars(config);
+		if (!fromVars) return;
+
+		// Build tween options
+		const tweenVars = {
+			...fromVars,
+			duration: config.duration || 1,
+			delay: config.delay || 0,
+			ease: config.ease || 'power2.out',
+			repeat: config.repeat || 0,
+			yoyo: !!config.yoyo,
+		};
+
+		// Stagger: animate children instead of the element itself
+		if (config.stagger) {
+			const targets = el.querySelectorAll(config.stagger.target || '> *');
+			if (targets.length) {
+				tweenVars.stagger = {
+					each: config.stagger.each || 0.15,
+					from: config.stagger.from || 'start',
+				};
+
+				if (config.scrollTrigger) {
+					tweenVars.scrollTrigger = buildScrollTrigger(el, config.scrollTrigger);
+				}
+
+				gsap.from(targets, tweenVars);
+				return;
+			}
+		}
+
+		// ScrollTrigger
+		if (config.scrollTrigger) {
+			tweenVars.scrollTrigger = buildScrollTrigger(el, config.scrollTrigger);
+		}
+
+		gsap.from(el, tweenVars);
+	});
+}
+
+/**
+ * Build "from" variables from a preset name or custom values.
+ */
+function buildPresetFromVars(config) {
+	const preset = config.preset || 'fade_up';
+
+	switch (preset) {
+		case 'fade_up':
+			return { y: 40, opacity: 0 };
+		case 'fade_down':
+			return { y: -40, opacity: 0 };
+		case 'fade_left':
+			return { x: 40, opacity: 0 };
+		case 'fade_right':
+			return { x: -40, opacity: 0 };
+		case 'zoom_in':
+			return { scale: 0.6, opacity: 0 };
+		case 'zoom_out':
+			return { scale: 1.4, opacity: 0 };
+		case 'rotate_in':
+			return { rotation: 15, opacity: 0, transformOrigin: 'center center' };
+		case 'flip_x':
+			return { rotationX: 90, opacity: 0, transformPerspective: 800 };
+		case 'flip_y':
+			return { rotationY: 90, opacity: 0, transformPerspective: 800 };
+		case 'blur_in':
+			return { opacity: 0, filter: 'blur(12px)' };
+		case 'bounce_in':
+			return { scale: 0.3, opacity: 0, ease: 'bounce.out' };
+		case 'slide_masked':
+			return { y: '100%', opacity: 0, clipPath: 'inset(100% 0 0 0)' };
+		case 'custom':
+			return buildCustomFromVars(config.custom);
+		default:
+			return { y: 40, opacity: 0 };
+	}
+}
+
+/**
+ * Build custom "from" vars from the custom config object.
+ */
+function buildCustomFromVars(custom) {
+	if (!custom) return { opacity: 0 };
+
+	const vars = {};
+	if (custom.x !== 0) vars.x = custom.x;
+	if (custom.y !== 0) vars.y = custom.y;
+	if (custom.rotation !== 0) vars.rotation = custom.rotation;
+	if (custom.scaleX !== undefined && custom.scaleX !== 1) vars.scaleX = custom.scaleX;
+	if (custom.scaleY !== undefined && custom.scaleY !== 1) vars.scaleY = custom.scaleY;
+	if (custom.opacity !== undefined) vars.opacity = custom.opacity;
+	if (custom.blur && custom.blur > 0) vars.filter = `blur(${custom.blur}px)`;
+	if (custom.skewX !== 0) vars.skewX = custom.skewX;
+	if (custom.skewY !== 0) vars.skewY = custom.skewY;
+
+	// Default: at least fade if nothing else set
+	if (Object.keys(vars).length === 0) {
+		vars.opacity = 0;
+	}
+
+	return vars;
+}
+
+/**
+ * Injected SplitText handler — finds text inside any element and splits it.
+ */
+function initInjectedSplitText(el, config) {
+	const splitConfig = config.splitText;
+
+	// Find the text element
+	let textEl;
+	if (splitConfig.selector) {
+		textEl = el.querySelector(splitConfig.selector);
+	}
+	if (!textEl) {
+		textEl = el.querySelector('h1, h2, h3, h4, h5, h6, p, .elementor-heading-title, .elementor-widget-container');
+	}
+	if (!textEl) return;
+
+	const split = new SplitText(textEl, {
+		type: splitConfig.type || 'chars',
+	});
+
+	const targets = split[splitConfig.animate || 'chars'];
+	if (!targets || !targets.length) return;
+
+	const fromVars = buildPresetFromVars(config);
+	if (!fromVars) return;
+
+	const tweenVars = {
+		...fromVars,
+		duration: config.duration || 1,
+		delay: config.delay || 0,
+		ease: config.ease || 'power2.out',
+		stagger: {
+			each: splitConfig.stagger || 0.03,
+			from: 'start',
+		},
+		repeat: config.repeat || 0,
+		yoyo: !!config.yoyo,
+	};
+
+	if (config.scrollTrigger) {
+		tweenVars.scrollTrigger = buildScrollTrigger(el, config.scrollTrigger);
+	}
+
+	gsap.from(targets, tweenVars);
+}
+
+/* ======================================
  * Helpers
  * ====================================== */
 
@@ -810,17 +987,29 @@ function buildScrollTrigger(el, stConfig) {
  * Bootstrap
  * ====================================== */
 
+/**
+ * Combined init — standalone widgets + injected animations.
+ */
+function initAll(container) {
+	initGsapWidgets(container);
+	initInjectedAnimations(container);
+}
+
 // Init on DOM ready
 document.addEventListener('DOMContentLoaded', () => {
-	initGsapWidgets();
+	initAll();
 });
 
 // Elementor frontend hooks (for live preview in editor)
 if (window.elementorFrontend) {
 	window.elementorFrontend.hooks.addAction('frontend/element_ready/global', (scope) => {
-		initGsapWidgets(scope[0] || scope);
+		initAll(scope[0] || scope);
 	});
 }
 
 // Export for editor use
-window.gsapElementor = { init: initGsapWidgets };
+window.gsapElementor = {
+	init: initAll,
+	initWidgets: initGsapWidgets,
+	initInjected: initInjectedAnimations,
+};

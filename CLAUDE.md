@@ -2,11 +2,16 @@
 
 ## Project Overview
 
-**gsap-elementor** is a WordPress plugin that integrates [GSAP (GreenSock Animation Platform)](https://gsap.com/) with the [Elementor](https://elementor.com/) page builder. It provides 14 standalone Elementor widgets — one for each major GSAP feature — with live editor preview support.
+**gsap-elementor** is a WordPress plugin that integrates [GSAP (GreenSock Animation Platform)](https://gsap.com/) with the [Elementor](https://elementor.com/) page builder. It uses a **hybrid architecture**:
+
+1. **Injected Controls** — Adds a "GSAP Animation" section to the Advanced tab of *every* Elementor widget, section, column, and container. Users can animate any element (including third-party widgets) without writing code.
+2. **Standalone Widgets** — 14 dedicated widgets for specialized GSAP features (SplitText, MorphSVG, DrawSVG, Flip grids, Draggable, Physics2D, etc.) that need custom markup.
+
+Both systems support live preview in the Elementor editor.
 
 **Author:** [Craft](https://craft.com.sg)
 **License:** GPL-2.0-or-later
-**Status:** v1.0.0 — all widgets implemented
+**Status:** v1.0.0 — hybrid architecture (injected controls + 14 standalone widgets)
 
 ## Tech Stack
 
@@ -31,7 +36,8 @@ gsap-elementor/
 ├── includes/
 │   ├── class-plugin.php                 # Singleton bootstrap, hooks, category registration
 │   ├── class-assets.php                 # Script/style enqueuing (frontend + editor + preview)
-│   ├── class-widgets-manager.php        # Auto-loads and registers all 14 widgets
+│   ├── class-controls-injector.php      # Injects GSAP Animation controls into ALL Elementor elements
+│   ├── class-widgets-manager.php        # Auto-loads and registers all 14 standalone widgets
 │   └── widgets/
 │       ├── class-widget-base.php        # Abstract base — shared controls (easing, transform, ScrollTrigger)
 │       ├── class-widget-gsap-animate.php       # Core tween (to/from/fromTo + stagger)
@@ -63,13 +69,23 @@ gsap-elementor/
 
 ## Architecture
 
-### Data Flow
-1. **PHP widget** renders HTML with `data-gsap-widget="widget_name"` and `data-gsap-config='{ JSON }'`
-2. **`frontend.js`** queries all `[data-gsap-widget]` elements, parses config, and dispatches to the correct initializer
-3. **`editor.js`** listens for Elementor panel changes and reinitializes widgets in the preview iframe for live preview
+### Two Animation Systems
 
-### Widget Pattern
-Every widget follows the same pattern:
+#### 1. Injected Controls (any element)
+- **`Controls_Injector`** hooks into `elementor/element/*/after_section_end` to add a "GSAP Animation" section under the Advanced tab of every widget, section, column, and container.
+- On render, it outputs `data-gsap-anim='{ JSON }'` on the element wrapper.
+- **`frontend.js → initInjectedAnimations()`** queries all `[data-gsap-anim]` elements and applies `gsap.from()` with the configured preset/custom values.
+- Supports: 12 presets (fade, zoom, flip, blur, bounce, slide-masked), custom transforms (x/y/rotation/scale/opacity/blur/skew), stagger children, ScrollTrigger, and SplitText on any text element.
+
+#### 2. Standalone Widgets (specialized GSAP features)
+- **PHP widget** renders HTML with `data-gsap-widget="widget_name"` and `data-gsap-config='{ JSON }'`
+- **`frontend.js → initGsapWidgets()`** dispatches to the correct per-widget initializer.
+
+#### Live Preview
+- **`editor.js`** listens for panel changes on widgets, sections, columns, and containers. It kills existing tweens, clears init flags, resets transforms, and re-runs `gsapElementor.init()` for both systems.
+
+### Standalone Widget Pattern
+Every standalone widget follows the same pattern:
 - Extends `Widget_GSAP_Base` (which extends Elementor's `Widget_Base`)
 - Uses `register_controls()` to define Elementor panel UI
 - Uses `render()` to output HTML with `data-gsap-widget` and `data-gsap-config` attributes
@@ -127,7 +143,9 @@ Build outputs:
 - GSAP is bundled via npm — no external CDN.
 - All widget handlers are in `src/js/frontend.js` and dispatched by `data-gsap-widget` attribute.
 - Use vanilla JS only — no jQuery.
-- `window.gsapElementor.init()` is the public API for reinitializing widgets.
+- `window.gsapElementor.init()` reinitializes both standalone widgets and injected animations.
+- `window.gsapElementor.initWidgets()` reinitializes only standalone widgets.
+- `window.gsapElementor.initInjected()` reinitializes only injected animations.
 
 ### Adding a New Widget
 1. Create `includes/widgets/class-widget-{name}.php` extending `Widget_GSAP_Base`
@@ -143,7 +161,12 @@ Build outputs:
 
 ## Key Elementor Integration Points
 
-- **`elementor/widgets/register`** — Registers all 14 widgets via `Widgets_Manager::register()`
+- **`elementor/widgets/register`** — Registers all 14 standalone widgets via `Widgets_Manager::register()`
+- **`elementor/element/common/_section_style/after_section_end`** — Injects GSAP controls into all widgets
+- **`elementor/element/section/section_advanced/after_section_end`** — Injects GSAP controls into sections
+- **`elementor/element/column/section_advanced/after_section_end`** — Injects GSAP controls into columns
+- **`elementor/element/container/section_layout/after_section_end`** — Injects GSAP controls into containers (Elementor 3.6+)
+- **`elementor/frontend/{widget,section,column,container}/before_render`** — Outputs `data-gsap-anim` attribute
 - **`elementor/frontend/after_enqueue_scripts`** — Enqueues `gsap-frontend.js` + CSS
 - **`elementor/editor/after_enqueue_scripts`** — Enqueues `gsap-editor.js` for panel integration
 - **`elementor/preview/enqueue_scripts`** — Enqueues frontend scripts in preview iframe

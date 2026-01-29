@@ -39,6 +39,7 @@ final class Plugin {
 	private function load_dependencies() {
 		require_once GSAP_ELEMENTOR_PATH . 'includes/class-assets.php';
 		require_once GSAP_ELEMENTOR_PATH . 'includes/class-widgets-manager.php';
+		require_once GSAP_ELEMENTOR_PATH . 'includes/class-controls-injector.php';
 	}
 
 	/**
@@ -52,6 +53,9 @@ final class Plugin {
 
 		// Register widget categories
 		add_action( 'elementor/elements/categories_registered', [ $this, 'register_categories' ] );
+
+		// Inject GSAP controls into all Elementor elements
+		Controls_Injector::init();
 	}
 
 	/**
