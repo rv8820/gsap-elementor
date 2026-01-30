@@ -5,13 +5,13 @@
 **gsap-elementor** is a WordPress plugin that integrates [GSAP (GreenSock Animation Platform)](https://gsap.com/) with the [Elementor](https://elementor.com/) page builder. It uses a **hybrid architecture**:
 
 1. **Injected Controls** — Adds a "GSAP Animation" section to the Advanced tab of *every* Elementor widget, section, column, and container. Users can animate any element (including third-party widgets) without writing code.
-2. **Standalone Widgets** — 14 dedicated widgets for specialized GSAP features (SplitText, MorphSVG, DrawSVG, Flip grids, Draggable, Physics2D, etc.) that need custom markup.
+2. **Standalone Widgets** — 10 dedicated widgets for specialized GSAP features (MorphSVG, DrawSVG, Flip grids, Draggable, Physics2D, etc.) that need custom markup not achievable via injected controls.
 
 Both systems support live preview in the Elementor editor.
 
 **Author:** [Craft](https://craft.com.sg)
 **License:** GPL-2.0-or-later
-**Status:** v1.0.0 — hybrid architecture (injected controls + 14 standalone widgets)
+**Status:** v1.1.0 — hybrid architecture (injected controls + 10 standalone widgets)
 
 ## Tech Stack
 
@@ -37,13 +37,9 @@ gsap-elementor/
 │   ├── class-plugin.php                 # Singleton bootstrap, hooks, category registration
 │   ├── class-assets.php                 # Script/style enqueuing (frontend + editor + preview)
 │   ├── class-controls-injector.php      # Injects GSAP Animation controls into ALL Elementor elements
-│   ├── class-widgets-manager.php        # Auto-loads and registers all 14 standalone widgets
+│   ├── class-widgets-manager.php        # Auto-loads and registers all 10 standalone widgets
 │   └── widgets/
 │       ├── class-widget-base.php        # Abstract base — shared controls (easing, transform, ScrollTrigger)
-│       ├── class-widget-gsap-animate.php       # Core tween (to/from/fromTo + stagger)
-│       ├── class-widget-scroll-trigger.php     # Scroll-triggered animations (pin, scrub, parallax)
-│       ├── class-widget-scroll-to.php          # Smooth scroll button
-│       ├── class-widget-split-text.php         # SplitText (chars/words/lines + presets)
 │       ├── class-widget-scramble-text.php      # ScrambleText decode effect
 │       ├── class-widget-text-typewriter.php    # TextPlugin typewriter + cursor
 │       ├── class-widget-draw-svg.php           # DrawSVG stroke animation (preset shapes + custom)
@@ -103,10 +99,6 @@ Every standalone widget follows the same pattern:
 
 | Widget | Class | GSAP Plugin(s) |
 |--------|-------|----------------|
-| GSAP Animate | `Widget_GSAP_Animate` | Core (to/from/fromTo) |
-| GSAP ScrollTrigger | `Widget_Scroll_Trigger` | ScrollTrigger |
-| GSAP Scroll To | `Widget_Scroll_To` | ScrollToPlugin |
-| GSAP SplitText | `Widget_Split_Text` | SplitText |
 | GSAP ScrambleText | `Widget_Scramble_Text` | ScrambleTextPlugin |
 | GSAP Typewriter | `Widget_Text_Typewriter` | TextPlugin |
 | GSAP DrawSVG | `Widget_Draw_SVG` | DrawSVGPlugin |

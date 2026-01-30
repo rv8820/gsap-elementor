@@ -15,13 +15,7 @@ class Widgets_Manager {
 	 */
 	private static function get_widgets() {
 		return [
-			// Core Animation
-			'widget-gsap-animate'        => 'Widget_GSAP_Animate',
-			'widget-scroll-trigger'      => 'Widget_Scroll_Trigger',
-			'widget-scroll-to'           => 'Widget_Scroll_To',
-
 			// Text Animation
-			'widget-split-text'          => 'Widget_Split_Text',
 			'widget-scramble-text'       => 'Widget_Scramble_Text',
 			'widget-text-typewriter'     => 'Widget_Text_Typewriter',
 
