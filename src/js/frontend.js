@@ -818,6 +818,19 @@ function initInjectedAnimations(container) {
 			yoyo: !!config.yoyo,
 		};
 
+		// Build ScrollTrigger — always apply by default so animations
+		// only play when the element scrolls into view.
+		if (config.scrollTrigger) {
+			tweenVars.scrollTrigger = buildScrollTrigger(el, config.scrollTrigger);
+		} else if (config.scrollTrigger !== false) {
+			// Default ScrollTrigger: animate when element enters viewport
+			tweenVars.scrollTrigger = {
+				trigger: el,
+				start: 'top 85%',
+				toggleActions: 'play none none none',
+			};
+		}
+
 		// Stagger: animate children instead of the element itself
 		if (config.stagger) {
 			const targets = el.querySelectorAll(config.stagger.target || '> *');
@@ -827,18 +840,9 @@ function initInjectedAnimations(container) {
 					from: config.stagger.from || 'start',
 				};
 
-				if (config.scrollTrigger) {
-					tweenVars.scrollTrigger = buildScrollTrigger(el, config.scrollTrigger);
-				}
-
 				gsap.from(targets, tweenVars);
 				return;
 			}
-		}
-
-		// ScrollTrigger
-		if (config.scrollTrigger) {
-			tweenVars.scrollTrigger = buildScrollTrigger(el, config.scrollTrigger);
 		}
 
 		gsap.from(el, tweenVars);
@@ -949,6 +953,12 @@ function initInjectedSplitText(el, config) {
 
 	if (config.scrollTrigger) {
 		tweenVars.scrollTrigger = buildScrollTrigger(el, config.scrollTrigger);
+	} else if (config.scrollTrigger !== false) {
+		tweenVars.scrollTrigger = {
+			trigger: el,
+			start: 'top 85%',
+			toggleActions: 'play none none none',
+		};
 	}
 
 	gsap.from(targets, tweenVars);

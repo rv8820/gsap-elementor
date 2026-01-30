@@ -37,41 +37,33 @@ class Controls_Injector {
 	}
 
 	/**
-	 * Easing options (static copy — avoids widget instance dependency).
+	 * Grouped easing options with friendly labels.
 	 */
 	private static function get_easing_options() {
 		return [
-			'none'           => 'none (linear)',
-			'power1.in'     => 'power1.in',
-			'power1.out'    => 'power1.out',
-			'power1.inOut'  => 'power1.inOut',
-			'power2.in'     => 'power2.in',
-			'power2.out'    => 'power2.out',
-			'power2.inOut'  => 'power2.inOut',
-			'power3.in'     => 'power3.in',
-			'power3.out'    => 'power3.out',
-			'power3.inOut'  => 'power3.inOut',
-			'power4.in'     => 'power4.in',
-			'power4.out'    => 'power4.out',
-			'power4.inOut'  => 'power4.inOut',
-			'back.in'       => 'back.in',
-			'back.out'      => 'back.out',
-			'back.inOut'    => 'back.inOut',
-			'bounce.in'     => 'bounce.in',
-			'bounce.out'    => 'bounce.out',
-			'bounce.inOut'  => 'bounce.inOut',
-			'circ.in'       => 'circ.in',
-			'circ.out'      => 'circ.out',
-			'circ.inOut'    => 'circ.inOut',
-			'elastic.in'    => 'elastic.in',
-			'elastic.out'   => 'elastic.out',
-			'elastic.inOut' => 'elastic.inOut',
-			'expo.in'       => 'expo.in',
-			'expo.out'      => 'expo.out',
-			'expo.inOut'    => 'expo.inOut',
-			'sine.in'       => 'sine.in',
-			'sine.out'      => 'sine.out',
-			'sine.inOut'    => 'sine.inOut',
+			'none'           => 'Linear (no easing)',
+			'power1.out'    => 'Gentle (ease out)',
+			'power2.out'    => 'Smooth (ease out) — recommended',
+			'power3.out'    => 'Strong (ease out)',
+			'power4.out'    => 'Extra strong (ease out)',
+			'power1.inOut'  => 'Gentle (ease in & out)',
+			'power2.inOut'  => 'Smooth (ease in & out)',
+			'power3.inOut'  => 'Strong (ease in & out)',
+			'power1.in'     => 'Gentle (ease in)',
+			'power2.in'     => 'Smooth (ease in)',
+			'power3.in'     => 'Strong (ease in)',
+			'back.out'      => 'Overshoot (ease out)',
+			'back.inOut'    => 'Overshoot (in & out)',
+			'bounce.out'    => 'Bounce (ease out)',
+			'bounce.inOut'  => 'Bounce (in & out)',
+			'elastic.out'   => 'Elastic (ease out)',
+			'elastic.inOut' => 'Elastic (in & out)',
+			'circ.out'      => 'Circular (ease out)',
+			'circ.inOut'    => 'Circular (in & out)',
+			'expo.out'      => 'Exponential (ease out)',
+			'expo.inOut'    => 'Exponential (in & out)',
+			'sine.out'      => 'Sine wave (ease out)',
+			'sine.inOut'    => 'Sine wave (in & out)',
 		];
 	}
 
@@ -84,124 +76,141 @@ class Controls_Injector {
 
 		// ─── Main Section ───────────────────────────────────────────────
 		$element->start_controls_section( 'gsap_animation_section', [
-			'label' => esc_html__( 'GSAP Animation', 'gsap-elementor' ),
+			'label' => esc_html__( '✦ GSAP Animation', 'gsap-elementor' ),
 			'tab'   => Controls_Manager::TAB_ADVANCED,
 		] );
 
 		$element->add_control( 'gsap_enable', [
-			'label'        => esc_html__( 'Enable GSAP Animation', 'gsap-elementor' ),
+			'label'        => esc_html__( 'Enable Animation', 'gsap-elementor' ),
 			'type'         => Controls_Manager::SWITCHER,
 			'default'      => '',
 			'return_value' => 'yes',
+			'description'  => esc_html__( 'Turn on to animate this element when it scrolls into view.', 'gsap-elementor' ),
 		] );
 
-		// ─── Animation Preset ───────────────────────────────────────────
+		// ─── Animation Effect ──────────────────────────────────────────
 		$element->add_control( 'gsap_preset', [
-			'label'     => esc_html__( 'Animation Preset', 'gsap-elementor' ),
-			'type'      => Controls_Manager::SELECT,
-			'default'   => 'fade_up',
-			'options'   => [
-				'fade_up'      => 'Fade Up',
-				'fade_down'    => 'Fade Down',
-				'fade_left'    => 'Fade Left',
-				'fade_right'   => 'Fade Right',
+			'label'       => esc_html__( 'Animation Effect', 'gsap-elementor' ),
+			'type'        => Controls_Manager::SELECT,
+			'default'     => 'fade_up',
+			'options'     => [
+				'fade_up'      => 'Fade Up ↑',
+				'fade_down'    => 'Fade Down ↓',
+				'fade_left'    => 'Fade Left ←',
+				'fade_right'   => 'Fade Right →',
 				'zoom_in'      => 'Zoom In',
 				'zoom_out'     => 'Zoom Out',
 				'rotate_in'    => 'Rotate In',
-				'flip_x'       => 'Flip X',
-				'flip_y'       => 'Flip Y',
+				'flip_x'       => 'Flip Horizontal',
+				'flip_y'       => 'Flip Vertical',
 				'blur_in'      => 'Blur In',
 				'bounce_in'    => 'Bounce In',
-				'slide_masked' => 'Slide (Masked)',
-				'custom'       => 'Custom',
+				'slide_masked' => 'Slide Up (Masked)',
+				'custom'       => '— Custom Values —',
 			],
-			'condition' => [ 'gsap_enable' => 'yes' ],
+			'description' => esc_html__( 'Choose a preset animation or "Custom Values" for full control.', 'gsap-elementor' ),
+			'condition'   => [ 'gsap_enable' => 'yes' ],
 		] );
 
-		// ─── Custom Transform ────────────────────────────────────────────
+		// ─── Custom Transform (only visible when preset = custom) ────
 		$element->add_control( 'gsap_heading_custom', [
-			'label'     => esc_html__( 'Custom "From" Values', 'gsap-elementor' ),
+			'label'     => esc_html__( 'Custom Starting State', 'gsap-elementor' ),
 			'type'      => Controls_Manager::HEADING,
 			'separator' => 'before',
 			'condition' => [ 'gsap_enable' => 'yes', 'gsap_preset' => 'custom' ],
 		] );
 
-		$element->add_control( 'gsap_x', [
-			'label'     => esc_html__( 'X (px)', 'gsap-elementor' ),
-			'type'      => Controls_Manager::NUMBER,
-			'default'   => 0,
+		$element->add_control( 'gsap_custom_note', [
+			'type'      => Controls_Manager::RAW_HTML,
+			'raw'       => '<p style="color:#93003c;font-size:11px;line-height:1.4;">' . esc_html__( 'Set the starting state of the element. It will animate FROM these values TO its normal position.', 'gsap-elementor' ) . '</p>',
 			'condition' => [ 'gsap_enable' => 'yes', 'gsap_preset' => 'custom' ],
+		] );
+
+		$element->add_control( 'gsap_x', [
+			'label'       => esc_html__( 'Move X (horizontal)', 'gsap-elementor' ),
+			'type'        => Controls_Manager::NUMBER,
+			'default'     => 0,
+			'description' => esc_html__( 'Horizontal offset in pixels. Positive = from right, negative = from left.', 'gsap-elementor' ),
+			'condition'   => [ 'gsap_enable' => 'yes', 'gsap_preset' => 'custom' ],
 		] );
 
 		$element->add_control( 'gsap_y', [
-			'label'     => esc_html__( 'Y (px)', 'gsap-elementor' ),
-			'type'      => Controls_Manager::NUMBER,
-			'default'   => 0,
-			'condition' => [ 'gsap_enable' => 'yes', 'gsap_preset' => 'custom' ],
+			'label'       => esc_html__( 'Move Y (vertical)', 'gsap-elementor' ),
+			'type'        => Controls_Manager::NUMBER,
+			'default'     => 0,
+			'description' => esc_html__( 'Vertical offset in pixels. Positive = from below, negative = from above.', 'gsap-elementor' ),
+			'condition'   => [ 'gsap_enable' => 'yes', 'gsap_preset' => 'custom' ],
 		] );
 
 		$element->add_control( 'gsap_rotation', [
-			'label'     => esc_html__( 'Rotation (deg)', 'gsap-elementor' ),
-			'type'      => Controls_Manager::NUMBER,
-			'default'   => 0,
-			'min'       => -360,
-			'max'       => 360,
-			'condition' => [ 'gsap_enable' => 'yes', 'gsap_preset' => 'custom' ],
+			'label'       => esc_html__( 'Rotation', 'gsap-elementor' ),
+			'type'        => Controls_Manager::NUMBER,
+			'default'     => 0,
+			'min'         => -360,
+			'max'         => 360,
+			'description' => esc_html__( 'Starting rotation in degrees.', 'gsap-elementor' ),
+			'condition'   => [ 'gsap_enable' => 'yes', 'gsap_preset' => 'custom' ],
 		] );
 
 		$element->add_control( 'gsap_scale_x', [
-			'label'     => esc_html__( 'Scale X', 'gsap-elementor' ),
-			'type'      => Controls_Manager::NUMBER,
-			'default'   => 1,
-			'min'       => 0,
-			'max'       => 10,
-			'step'      => 0.1,
-			'condition' => [ 'gsap_enable' => 'yes', 'gsap_preset' => 'custom' ],
+			'label'       => esc_html__( 'Scale X', 'gsap-elementor' ),
+			'type'        => Controls_Manager::NUMBER,
+			'default'     => 1,
+			'min'         => 0,
+			'max'         => 10,
+			'step'        => 0.1,
+			'description' => esc_html__( 'Horizontal scale. 1 = normal size, 0.5 = half, 2 = double.', 'gsap-elementor' ),
+			'condition'   => [ 'gsap_enable' => 'yes', 'gsap_preset' => 'custom' ],
 		] );
 
 		$element->add_control( 'gsap_scale_y', [
-			'label'     => esc_html__( 'Scale Y', 'gsap-elementor' ),
-			'type'      => Controls_Manager::NUMBER,
-			'default'   => 1,
-			'min'       => 0,
-			'max'       => 10,
-			'step'      => 0.1,
-			'condition' => [ 'gsap_enable' => 'yes', 'gsap_preset' => 'custom' ],
+			'label'       => esc_html__( 'Scale Y', 'gsap-elementor' ),
+			'type'        => Controls_Manager::NUMBER,
+			'default'     => 1,
+			'min'         => 0,
+			'max'         => 10,
+			'step'        => 0.1,
+			'description' => esc_html__( 'Vertical scale. 1 = normal size, 0.5 = half, 2 = double.', 'gsap-elementor' ),
+			'condition'   => [ 'gsap_enable' => 'yes', 'gsap_preset' => 'custom' ],
 		] );
 
 		$element->add_control( 'gsap_opacity', [
-			'label'     => esc_html__( 'Opacity', 'gsap-elementor' ),
-			'type'      => Controls_Manager::SLIDER,
-			'range'     => [ 'px' => [ 'min' => 0, 'max' => 1, 'step' => 0.05 ] ],
-			'default'   => [ 'size' => 0 ],
-			'condition' => [ 'gsap_enable' => 'yes', 'gsap_preset' => 'custom' ],
+			'label'       => esc_html__( 'Starting Opacity', 'gsap-elementor' ),
+			'type'        => Controls_Manager::SLIDER,
+			'range'       => [ 'px' => [ 'min' => 0, 'max' => 1, 'step' => 0.05 ] ],
+			'default'     => [ 'size' => 0 ],
+			'description' => esc_html__( '0 = invisible (fades in), 1 = fully visible (no fade).', 'gsap-elementor' ),
+			'condition'   => [ 'gsap_enable' => 'yes', 'gsap_preset' => 'custom' ],
 		] );
 
 		$element->add_control( 'gsap_blur', [
-			'label'     => esc_html__( 'Blur (px)', 'gsap-elementor' ),
-			'type'      => Controls_Manager::NUMBER,
-			'default'   => 0,
-			'min'       => 0,
-			'max'       => 50,
-			'condition' => [ 'gsap_enable' => 'yes', 'gsap_preset' => 'custom' ],
+			'label'       => esc_html__( 'Blur', 'gsap-elementor' ),
+			'type'        => Controls_Manager::NUMBER,
+			'default'     => 0,
+			'min'         => 0,
+			'max'         => 50,
+			'description' => esc_html__( 'Starting blur in pixels. 0 = sharp, higher = more blurred.', 'gsap-elementor' ),
+			'condition'   => [ 'gsap_enable' => 'yes', 'gsap_preset' => 'custom' ],
 		] );
 
 		$element->add_control( 'gsap_skew_x', [
-			'label'     => esc_html__( 'Skew X (deg)', 'gsap-elementor' ),
-			'type'      => Controls_Manager::NUMBER,
-			'default'   => 0,
-			'min'       => -90,
-			'max'       => 90,
-			'condition' => [ 'gsap_enable' => 'yes', 'gsap_preset' => 'custom' ],
+			'label'       => esc_html__( 'Skew X', 'gsap-elementor' ),
+			'type'        => Controls_Manager::NUMBER,
+			'default'     => 0,
+			'min'         => -90,
+			'max'         => 90,
+			'description' => esc_html__( 'Horizontal skew in degrees.', 'gsap-elementor' ),
+			'condition'   => [ 'gsap_enable' => 'yes', 'gsap_preset' => 'custom' ],
 		] );
 
 		$element->add_control( 'gsap_skew_y', [
-			'label'     => esc_html__( 'Skew Y (deg)', 'gsap-elementor' ),
-			'type'      => Controls_Manager::NUMBER,
-			'default'   => 0,
-			'min'       => -90,
-			'max'       => 90,
-			'condition' => [ 'gsap_enable' => 'yes', 'gsap_preset' => 'custom' ],
+			'label'       => esc_html__( 'Skew Y', 'gsap-elementor' ),
+			'type'        => Controls_Manager::NUMBER,
+			'default'     => 0,
+			'min'         => -90,
+			'max'         => 90,
+			'description' => esc_html__( 'Vertical skew in degrees.', 'gsap-elementor' ),
+			'condition'   => [ 'gsap_enable' => 'yes', 'gsap_preset' => 'custom' ],
 		] );
 
 		// ─── Timing ────────────────────────────────────────────────────
@@ -213,31 +222,34 @@ class Controls_Injector {
 		] );
 
 		$element->add_control( 'gsap_duration', [
-			'label'     => esc_html__( 'Duration (s)', 'gsap-elementor' ),
-			'type'      => Controls_Manager::NUMBER,
-			'default'   => 1,
-			'min'       => 0,
-			'max'       => 20,
-			'step'      => 0.1,
-			'condition' => [ 'gsap_enable' => 'yes' ],
+			'label'       => esc_html__( 'Duration', 'gsap-elementor' ),
+			'type'        => Controls_Manager::NUMBER,
+			'default'     => 1,
+			'min'         => 0,
+			'max'         => 20,
+			'step'        => 0.1,
+			'description' => esc_html__( 'How long the animation takes, in seconds.', 'gsap-elementor' ),
+			'condition'   => [ 'gsap_enable' => 'yes' ],
 		] );
 
 		$element->add_control( 'gsap_delay', [
-			'label'     => esc_html__( 'Delay (s)', 'gsap-elementor' ),
-			'type'      => Controls_Manager::NUMBER,
-			'default'   => 0,
-			'min'       => 0,
-			'max'       => 20,
-			'step'      => 0.1,
-			'condition' => [ 'gsap_enable' => 'yes' ],
+			'label'       => esc_html__( 'Delay', 'gsap-elementor' ),
+			'type'        => Controls_Manager::NUMBER,
+			'default'     => 0,
+			'min'         => 0,
+			'max'         => 20,
+			'step'        => 0.1,
+			'description' => esc_html__( 'Wait time before animation starts, in seconds.', 'gsap-elementor' ),
+			'condition'   => [ 'gsap_enable' => 'yes' ],
 		] );
 
 		$element->add_control( 'gsap_ease', [
-			'label'     => esc_html__( 'Easing', 'gsap-elementor' ),
-			'type'      => Controls_Manager::SELECT,
-			'default'   => 'power2.out',
-			'options'   => self::get_easing_options(),
-			'condition' => [ 'gsap_enable' => 'yes' ],
+			'label'       => esc_html__( 'Easing', 'gsap-elementor' ),
+			'type'        => Controls_Manager::SELECT,
+			'default'     => 'power2.out',
+			'options'     => self::get_easing_options(),
+			'description' => esc_html__( 'Controls the acceleration curve. "Ease out" starts fast and slows down. "Ease in" starts slow and speeds up.', 'gsap-elementor' ),
+			'condition'   => [ 'gsap_enable' => 'yes' ],
 		] );
 
 		$element->add_control( 'gsap_repeat', [
@@ -246,189 +258,214 @@ class Controls_Injector {
 			'default'     => 0,
 			'min'         => -1,
 			'max'         => 100,
-			'description' => esc_html__( '-1 for infinite', 'gsap-elementor' ),
+			'description' => esc_html__( '0 = play once. Set -1 to loop forever.', 'gsap-elementor' ),
 			'condition'   => [ 'gsap_enable' => 'yes' ],
 		] );
 
 		$element->add_control( 'gsap_yoyo', [
-			'label'     => esc_html__( 'Yoyo', 'gsap-elementor' ),
-			'type'      => Controls_Manager::SWITCHER,
-			'default'   => '',
-			'condition' => [ 'gsap_enable' => 'yes' ],
+			'label'       => esc_html__( 'Yoyo (reverse on repeat)', 'gsap-elementor' ),
+			'type'        => Controls_Manager::SWITCHER,
+			'default'     => '',
+			'description' => esc_html__( 'When repeating, play the animation backwards every other cycle.', 'gsap-elementor' ),
+			'condition'   => [ 'gsap_enable' => 'yes' ],
 		] );
 
-		// ─── Stagger (for child elements) ─────────────────────────────
+		// ─── Stagger (animate children one by one) ───────────────────
 		$element->add_control( 'gsap_heading_stagger', [
-			'label'     => esc_html__( 'Stagger', 'gsap-elementor' ),
+			'label'     => esc_html__( 'Stagger Children', 'gsap-elementor' ),
 			'type'      => Controls_Manager::HEADING,
 			'separator' => 'before',
 			'condition' => [ 'gsap_enable' => 'yes' ],
 		] );
 
 		$element->add_control( 'gsap_stagger_enable', [
-			'label'       => esc_html__( 'Stagger Children', 'gsap-elementor' ),
+			'label'       => esc_html__( 'Animate children one by one', 'gsap-elementor' ),
 			'type'        => Controls_Manager::SWITCHER,
 			'default'     => '',
-			'description' => esc_html__( 'Animate direct children instead of the element itself', 'gsap-elementor' ),
+			'description' => esc_html__( 'Instead of animating the whole element, animate each child element with a delay between them.', 'gsap-elementor' ),
 			'condition'   => [ 'gsap_enable' => 'yes' ],
 		] );
 
 		$element->add_control( 'gsap_stagger_target', [
-			'label'       => esc_html__( 'Stagger Selector', 'gsap-elementor' ),
+			'label'       => esc_html__( 'Target Selector', 'gsap-elementor' ),
 			'type'        => Controls_Manager::TEXT,
 			'default'     => '> *',
-			'description' => esc_html__( 'CSS selector relative to this element (default: direct children)', 'gsap-elementor' ),
+			'description' => esc_html__( 'CSS selector for which children to animate. Default "> *" targets all direct children.', 'gsap-elementor' ),
 			'condition'   => [ 'gsap_enable' => 'yes', 'gsap_stagger_enable' => 'yes' ],
 		] );
 
 		$element->add_control( 'gsap_stagger_amount', [
-			'label'     => esc_html__( 'Stagger Amount (s)', 'gsap-elementor' ),
-			'type'      => Controls_Manager::NUMBER,
-			'default'   => 0.15,
-			'min'       => 0,
-			'max'       => 5,
-			'step'      => 0.01,
-			'condition' => [ 'gsap_enable' => 'yes', 'gsap_stagger_enable' => 'yes' ],
+			'label'       => esc_html__( 'Delay Between Each', 'gsap-elementor' ),
+			'type'        => Controls_Manager::NUMBER,
+			'default'     => 0.15,
+			'min'         => 0,
+			'max'         => 5,
+			'step'        => 0.01,
+			'description' => esc_html__( 'Time in seconds between each child starting its animation.', 'gsap-elementor' ),
+			'condition'   => [ 'gsap_enable' => 'yes', 'gsap_stagger_enable' => 'yes' ],
 		] );
 
 		$element->add_control( 'gsap_stagger_from', [
-			'label'     => esc_html__( 'Stagger From', 'gsap-elementor' ),
-			'type'      => Controls_Manager::SELECT,
-			'default'   => 'start',
-			'options'   => [
-				'start'  => 'Start',
-				'end'    => 'End',
-				'center' => 'Center',
-				'edges'  => 'Edges',
-				'random' => 'Random',
+			'label'       => esc_html__( 'Start From', 'gsap-elementor' ),
+			'type'        => Controls_Manager::SELECT,
+			'default'     => 'start',
+			'options'     => [
+				'start'  => 'First child',
+				'end'    => 'Last child',
+				'center' => 'Center outward',
+				'edges'  => 'Edges inward',
+				'random' => 'Random order',
 			],
-			'condition' => [ 'gsap_enable' => 'yes', 'gsap_stagger_enable' => 'yes' ],
+			'description' => esc_html__( 'Which child animates first.', 'gsap-elementor' ),
+			'condition'   => [ 'gsap_enable' => 'yes', 'gsap_stagger_enable' => 'yes' ],
 		] );
 
-		// ─── ScrollTrigger ──────────────────────────────────────────────
+		// ─── Scroll Trigger ─────────────────────────────────────────────
 		$element->add_control( 'gsap_heading_scroll', [
-			'label'     => esc_html__( 'ScrollTrigger', 'gsap-elementor' ),
+			'label'     => esc_html__( 'Scroll Settings', 'gsap-elementor' ),
 			'type'      => Controls_Manager::HEADING,
 			'separator' => 'before',
 			'condition' => [ 'gsap_enable' => 'yes' ],
 		] );
 
-		$element->add_control( 'gsap_scroll_trigger', [
-			'label'     => esc_html__( 'Enable ScrollTrigger', 'gsap-elementor' ),
-			'type'      => Controls_Manager::SWITCHER,
-			'default'   => 'yes',
+		$element->add_control( 'gsap_scroll_note', [
+			'type'      => Controls_Manager::RAW_HTML,
+			'raw'       => '<p style="color:#555;font-size:11px;line-height:1.4;">' . esc_html__( 'By default, the animation plays when this element scrolls into view.', 'gsap-elementor' ) . '</p>',
 			'condition' => [ 'gsap_enable' => 'yes' ],
 		] );
 
+		$element->add_control( 'gsap_scroll_trigger', [
+			'label'       => esc_html__( 'Trigger on scroll into view', 'gsap-elementor' ),
+			'type'        => Controls_Manager::SWITCHER,
+			'default'     => 'yes',
+			'description' => esc_html__( 'Play the animation when the element enters the viewport. Turn off to play immediately on page load.', 'gsap-elementor' ),
+			'condition'   => [ 'gsap_enable' => 'yes' ],
+		] );
+
 		$element->add_control( 'gsap_scroll_start', [
-			'label'     => esc_html__( 'Start', 'gsap-elementor' ),
-			'type'      => Controls_Manager::TEXT,
-			'default'   => 'top 85%',
-			'condition' => [ 'gsap_enable' => 'yes', 'gsap_scroll_trigger' => 'yes' ],
+			'label'       => esc_html__( 'Start Position', 'gsap-elementor' ),
+			'type'        => Controls_Manager::TEXT,
+			'default'     => 'top 85%',
+			'description' => esc_html__( 'When to start. "top 85%" means: when the top of the element reaches 85% from the top of the viewport.', 'gsap-elementor' ),
+			'condition'   => [ 'gsap_enable' => 'yes', 'gsap_scroll_trigger' => 'yes' ],
 		] );
 
 		$element->add_control( 'gsap_scroll_end', [
-			'label'     => esc_html__( 'End', 'gsap-elementor' ),
-			'type'      => Controls_Manager::TEXT,
-			'default'   => 'bottom 20%',
-			'condition' => [ 'gsap_enable' => 'yes', 'gsap_scroll_trigger' => 'yes' ],
+			'label'       => esc_html__( 'End Position', 'gsap-elementor' ),
+			'type'        => Controls_Manager::TEXT,
+			'default'     => 'bottom 20%',
+			'description' => esc_html__( 'When to end (only matters for scrub/pin). "bottom 20%" means: when the bottom of the element reaches 20% from the top.', 'gsap-elementor' ),
+			'condition'   => [ 'gsap_enable' => 'yes', 'gsap_scroll_trigger' => 'yes' ],
 		] );
 
 		$element->add_control( 'gsap_scroll_scrub', [
-			'label'     => esc_html__( 'Scrub', 'gsap-elementor' ),
-			'type'      => Controls_Manager::SELECT,
-			'default'   => 'false',
-			'options'   => [
-				'false' => 'Off',
-				'true'  => 'On',
-				'0.5'   => '0.5s smooth',
-				'1'     => '1s smooth',
-				'2'     => '2s smooth',
+			'label'       => esc_html__( 'Scrub', 'gsap-elementor' ),
+			'type'        => Controls_Manager::SELECT,
+			'default'     => 'false',
+			'options'     => [
+				'false' => 'Off — play once when triggered',
+				'true'  => 'On — animation follows scroll position',
+				'0.5'   => 'Smooth (0.5s catch-up)',
+				'1'     => 'Smooth (1s catch-up)',
+				'2'     => 'Smooth (2s catch-up)',
 			],
-			'condition' => [ 'gsap_enable' => 'yes', 'gsap_scroll_trigger' => 'yes' ],
+			'description' => esc_html__( 'When on, the animation progress is tied to scroll position instead of playing through.', 'gsap-elementor' ),
+			'condition'   => [ 'gsap_enable' => 'yes', 'gsap_scroll_trigger' => 'yes' ],
 		] );
 
 		$element->add_control( 'gsap_scroll_pin', [
-			'label'     => esc_html__( 'Pin', 'gsap-elementor' ),
-			'type'      => Controls_Manager::SWITCHER,
-			'default'   => '',
-			'condition' => [ 'gsap_enable' => 'yes', 'gsap_scroll_trigger' => 'yes' ],
+			'label'       => esc_html__( 'Pin element while scrolling', 'gsap-elementor' ),
+			'type'        => Controls_Manager::SWITCHER,
+			'default'     => '',
+			'description' => esc_html__( 'Fix the element in place while the animation plays during scroll.', 'gsap-elementor' ),
+			'condition'   => [ 'gsap_enable' => 'yes', 'gsap_scroll_trigger' => 'yes' ],
 		] );
 
 		$element->add_control( 'gsap_scroll_toggle_actions', [
 			'label'       => esc_html__( 'Toggle Actions', 'gsap-elementor' ),
-			'type'        => Controls_Manager::TEXT,
+			'type'        => Controls_Manager::SELECT,
 			'default'     => 'play none none none',
-			'description' => esc_html__( 'onEnter onLeave onEnterBack onLeaveBack', 'gsap-elementor' ),
+			'options'     => [
+				'play none none none'      => 'Play once',
+				'play none none reverse'   => 'Play on enter, reverse on leave',
+				'play reverse play reverse' => 'Play/reverse on every scroll',
+				'play pause resume reset'  => 'Pause when out of view, reset on leave',
+				'restart none none none'   => 'Restart every time',
+			],
+			'description' => esc_html__( 'What happens when scrolling in and out of the trigger area.', 'gsap-elementor' ),
 			'condition'   => [ 'gsap_enable' => 'yes', 'gsap_scroll_trigger' => 'yes' ],
 		] );
 
 		$element->add_control( 'gsap_scroll_markers', [
-			'label'     => esc_html__( 'Debug Markers', 'gsap-elementor' ),
-			'type'      => Controls_Manager::SWITCHER,
-			'default'   => '',
-			'condition' => [ 'gsap_enable' => 'yes', 'gsap_scroll_trigger' => 'yes' ],
+			'label'       => esc_html__( 'Show Debug Markers', 'gsap-elementor' ),
+			'type'        => Controls_Manager::SWITCHER,
+			'default'     => '',
+			'description' => esc_html__( 'Display start/end markers on the page for debugging. Remember to turn this off before publishing.', 'gsap-elementor' ),
+			'condition'   => [ 'gsap_enable' => 'yes', 'gsap_scroll_trigger' => 'yes' ],
 		] );
 
 		// ─── SplitText (text elements) ──────────────────────────────────
 		$element->add_control( 'gsap_heading_split', [
-			'label'     => esc_html__( 'SplitText', 'gsap-elementor' ),
+			'label'     => esc_html__( 'Text Splitting', 'gsap-elementor' ),
 			'type'      => Controls_Manager::HEADING,
 			'separator' => 'before',
 			'condition' => [ 'gsap_enable' => 'yes' ],
 		] );
 
 		$element->add_control( 'gsap_split_enable', [
-			'label'       => esc_html__( 'Enable SplitText', 'gsap-elementor' ),
+			'label'       => esc_html__( 'Animate text by character/word/line', 'gsap-elementor' ),
 			'type'        => Controls_Manager::SWITCHER,
 			'default'     => '',
-			'description' => esc_html__( 'Splits text into chars/words/lines and animates each one', 'gsap-elementor' ),
+			'description' => esc_html__( 'Split text content and animate each piece individually. Works best on headings and paragraphs.', 'gsap-elementor' ),
 			'condition'   => [ 'gsap_enable' => 'yes' ],
 		] );
 
 		$element->add_control( 'gsap_split_type', [
-			'label'     => esc_html__( 'Split Type', 'gsap-elementor' ),
-			'type'      => Controls_Manager::SELECT,
-			'default'   => 'chars',
-			'options'   => [
+			'label'       => esc_html__( 'Split Into', 'gsap-elementor' ),
+			'type'        => Controls_Manager::SELECT,
+			'default'     => 'chars',
+			'options'     => [
 				'chars'             => 'Characters',
 				'words'             => 'Words',
 				'lines'             => 'Lines',
 				'chars,words'       => 'Characters & Words',
 				'words,lines'       => 'Words & Lines',
-				'chars,words,lines' => 'All',
+				'chars,words,lines' => 'All (characters, words & lines)',
 			],
-			'condition' => [ 'gsap_enable' => 'yes', 'gsap_split_enable' => 'yes' ],
+			'description' => esc_html__( 'How to break apart the text.', 'gsap-elementor' ),
+			'condition'   => [ 'gsap_enable' => 'yes', 'gsap_split_enable' => 'yes' ],
 		] );
 
 		$element->add_control( 'gsap_split_animate', [
-			'label'     => esc_html__( 'Animate', 'gsap-elementor' ),
-			'type'      => Controls_Manager::SELECT,
-			'default'   => 'chars',
-			'options'   => [
-				'chars' => 'Characters',
-				'words' => 'Words',
-				'lines' => 'Lines',
+			'label'       => esc_html__( 'Animate Each', 'gsap-elementor' ),
+			'type'        => Controls_Manager::SELECT,
+			'default'     => 'chars',
+			'options'     => [
+				'chars' => 'Character',
+				'words' => 'Word',
+				'lines' => 'Line',
 			],
-			'condition' => [ 'gsap_enable' => 'yes', 'gsap_split_enable' => 'yes' ],
+			'description' => esc_html__( 'Which pieces to animate. Must be included in "Split Into" above.', 'gsap-elementor' ),
+			'condition'   => [ 'gsap_enable' => 'yes', 'gsap_split_enable' => 'yes' ],
 		] );
 
 		$element->add_control( 'gsap_split_selector', [
-			'label'       => esc_html__( 'Text Selector', 'gsap-elementor' ),
+			'label'       => esc_html__( 'Text Element Selector', 'gsap-elementor' ),
 			'type'        => Controls_Manager::TEXT,
 			'default'     => '',
-			'description' => esc_html__( 'CSS selector for the text element (leave empty = first heading/paragraph found)', 'gsap-elementor' ),
+			'description' => esc_html__( 'CSS selector for the text element to split. Leave empty to auto-detect the first heading or paragraph.', 'gsap-elementor' ),
 			'condition'   => [ 'gsap_enable' => 'yes', 'gsap_split_enable' => 'yes' ],
 		] );
 
 		$element->add_control( 'gsap_split_stagger', [
-			'label'     => esc_html__( 'Stagger (s)', 'gsap-elementor' ),
-			'type'      => Controls_Manager::NUMBER,
-			'default'   => 0.03,
-			'min'       => 0,
-			'max'       => 2,
-			'step'      => 0.01,
-			'condition' => [ 'gsap_enable' => 'yes', 'gsap_split_enable' => 'yes' ],
+			'label'       => esc_html__( 'Stagger Delay', 'gsap-elementor' ),
+			'type'        => Controls_Manager::NUMBER,
+			'default'     => 0.03,
+			'min'         => 0,
+			'max'         => 2,
+			'step'        => 0.01,
+			'description' => esc_html__( 'Time in seconds between each character/word/line animating in.', 'gsap-elementor' ),
+			'condition'   => [ 'gsap_enable' => 'yes', 'gsap_split_enable' => 'yes' ],
 		] );
 
 		$element->end_controls_section();
@@ -479,8 +516,9 @@ class Controls_Injector {
 			];
 		}
 
-		// ScrollTrigger
-		if ( 'yes' === ( $settings['gsap_scroll_trigger'] ?? '' ) ) {
+		// ScrollTrigger — enabled by default
+		$scroll_enabled = $settings['gsap_scroll_trigger'] ?? 'yes';
+		if ( 'yes' === $scroll_enabled ) {
 			$scrub = $settings['gsap_scroll_scrub'] ?? 'false';
 			if ( 'true' === $scrub ) {
 				$scrub = true;
