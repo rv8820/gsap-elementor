@@ -1001,11 +1001,18 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Elementor frontend hooks (for live preview in editor)
-if (window.elementorFrontend) {
-	window.elementorFrontend.hooks.addAction('frontend/element_ready/global', (scope) => {
-		initAll(scope[0] || scope);
-	});
+// Must wait until elementorFrontend is available — it loads after our script.
+function registerElementorHooks() {
+	if (window.elementorFrontend && window.elementorFrontend.hooks) {
+		window.elementorFrontend.hooks.addAction('frontend/element_ready/global', (scope) => {
+			initAll(scope[0] || scope);
+		});
+	}
 }
+
+// Try immediately, and also on the Elementor init event
+registerElementorHooks();
+document.addEventListener('elementor/frontend/init', registerElementorHooks);
 
 // Export for editor use
 window.gsapElementor = {
